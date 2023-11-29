@@ -16,14 +16,19 @@ async function getData() {
   }
 }
 
-const Page = async () => {
+const Page = async ({ searchParams }) => {
+  //console.log(searchParams.page);
+
+  // round down so page 4.9 or 4.1 just gives 4
+  let page = parseInt(searchParams.page, 10);
+  // handle negatives and nulls with a default to page 1
+  page = !page || page < 1 ? 1 : page;
+
   const data = await getData();
 
   return (
     <>
       <div className="container mx-auto mt-8">
-        {data.itemCount}
-
         <ul className="grid grid-cols-4 gap-4 text-center">
           {data.items.map((item) => (
             <li
