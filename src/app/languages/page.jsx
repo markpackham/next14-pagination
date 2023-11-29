@@ -8,7 +8,8 @@ async function getData() {
 
     // DB Query for languages
     const items = await db.collection("languages").find({}).toArray();
-    const res = { items };
+    const itemCount = await db.collection("languages").countDocuments({});
+    const res = { items, itemCount };
     return res;
   } catch (error) {
     throw new Error("Failed to fetch data please try again later.");
@@ -21,10 +22,15 @@ const Page = async () => {
   return (
     <>
       <div className="container mx-auto mt-8">
+        {data.itemCount}
+
         <ul className="grid grid-cols-4 gap-4 text-center">
           {data.items.map((item) => (
-            <li key={item._id} className="bg-green-500">
-              <h2>{item.name}</h2>
+            <li
+              key={item._id}
+              className="bg-green-500 rounded-md p-4 text-black"
+            >
+              {item.name}
             </li>
           ))}
         </ul>
