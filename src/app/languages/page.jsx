@@ -60,9 +60,23 @@ const Page = async ({ searchParams }) => {
         </ul>
 
         {page === 1 ? (
-          <div className="opacity-60">Previous</div>
+          <div className="opacity-60" aria-disabled="true">
+            Previous
+          </div>
         ) : (
-          <Link href={`?page=${prevPage}`}>Previous</Link>
+          <Link href={`?page=${prevPage}`} aria-label="Previous Page">
+            Previous
+          </Link>
+        )}
+
+        {page === totalPages ? (
+          <div className="opacity-60" aria-disabled="true">
+            Next
+          </div>
+        ) : (
+          <Link href={`?page=${nextPage}`} aria-label="Next Page">
+            Next
+          </Link>
         )}
       </div>
     </>
