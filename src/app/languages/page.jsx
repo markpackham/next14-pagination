@@ -1,13 +1,18 @@
 import { connectToDatabase } from "@/utils/connectMongo";
 
-async function getData() {
+async function getData(perPage) {
   try {
     // DB Connect
     const client = await connectToDatabase();
     const db = client.db("programming");
 
     // DB Query for languages
-    const items = await db.collection("languages").find({}).toArray();
+    const items = await db
+      .collection("languages")
+      .find({})
+      .limit(perPage)
+      .toArray();
+
     const itemCount = await db.collection("languages").countDocuments({});
     const res = { items, itemCount };
     return res;
@@ -23,8 +28,10 @@ const Page = async ({ searchParams }) => {
   let page = parseInt(searchParams.page, 10);
   // handle negatives and nulls with a default to page 1
   page = !page || page < 1 ? 1 : page;
+  // Only 8 items per page
+  const perPage = 8;
 
-  const data = await getData();
+  const data = await getData(perPage);
 
   return (
     <>
