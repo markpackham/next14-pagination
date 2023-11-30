@@ -45,6 +45,8 @@ const Page = async ({ searchParams }) => {
   // Next page
   const nextPage = page + 1;
 
+  const isPageOutOfRange = page > totalPages;
+
   // Page Numbers
   const pageNumbers = [];
   const offsetNumber = 3;
@@ -69,44 +71,57 @@ const Page = async ({ searchParams }) => {
           ))}
         </ul>
 
-        <div className="flex justify-center items-center mt-16">
-          <div className="flex border-[1px] gap-4 rounded-[10px] border-light-green p-4">
-            {page === 1 ? (
-              <div className="opacity-60" aria-disabled="true">
-                Previous
-              </div>
-            ) : (
-              <Link href={`?page=${prevPage}`} aria-label="Previous Page">
-                Previous
-              </Link>
-            )}
+        {isPageOutOfRange ? (
+          <p>
+            No more pages!{" "}
+            <Link
+              href={`?page=1`}
+              aria-label="Return to Page 1"
+              className="bg-green-500 fw-bold px-2 rounded-md text-black"
+            >
+              Return to Page 1
+            </Link>
+          </p>
+        ) : (
+          <div className="flex justify-center items-center mt-16">
+            <div className="flex border-[1px] gap-4 rounded-[10px] border-light-green p-4">
+              {page === 1 ? (
+                <div className="opacity-60" aria-disabled="true">
+                  Previous
+                </div>
+              ) : (
+                <Link href={`?page=${prevPage}`} aria-label="Previous Page">
+                  Previous
+                </Link>
+              )}
 
-            {/* Highlight when on current page */}
-            {pageNumbers.map((pageNumber, index) => (
-              <Link
-                key={index}
-                className={
-                  page === pageNumber
-                    ? "bg-green-500 fw-bold px-2 rounded-md text-black"
-                    : "hover:bg-green-500 px-1 rounded-md"
-                }
-                href={`?page=${pageNumber}`}
-              >
-                {pageNumber}
-              </Link>
-            ))}
+              {/* Highlight when on current page */}
+              {pageNumbers.map((pageNumber, index) => (
+                <Link
+                  key={index}
+                  className={
+                    page === pageNumber
+                      ? "bg-green-500 fw-bold px-2 rounded-md text-black"
+                      : "hover:bg-green-500 px-1 rounded-md"
+                  }
+                  href={`?page=${pageNumber}`}
+                >
+                  {pageNumber}
+                </Link>
+              ))}
 
-            {page === totalPages ? (
-              <div className="opacity-60" aria-disabled="true">
-                Next
-              </div>
-            ) : (
-              <Link href={`?page=${nextPage}`} aria-label="Next Page">
-                Next
-              </Link>
-            )}
+              {page === totalPages ? (
+                <div className="opacity-60" aria-disabled="true">
+                  Next
+                </div>
+              ) : (
+                <Link href={`?page=${nextPage}`} aria-label="Next Page">
+                  Next
+                </Link>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
