@@ -1,6 +1,8 @@
 import { connectToDatabase } from "@/utils/connectMongo";
+import Link from "next/link";
 
-async function getData(perPage) {
+// Example page url query http://localhost:3000/languages?page=2
+async function getData(perPage, page) {
   try {
     // DB Connect
     const client = await connectToDatabase();
@@ -10,6 +12,8 @@ async function getData(perPage) {
     const items = await db
       .collection("languages")
       .find({})
+      // Calculate page offset
+      .skip(perPage * (page - 1))
       .limit(perPage)
       .toArray();
 
@@ -31,7 +35,15 @@ const Page = async ({ searchParams }) => {
   // Only 8 items per page
   const perPage = 8;
 
-  const data = await getData(perPage);
+  const data = await getData(perPage, page);
+
+  // Total Pages
+  const totalPages = Math.ceil(data.itemCount / perPage);
+
+  // Previous Page, handle offset
+  const prevPage = page - 1 > 0 ? page - 1 : 1;
+  // Next page
+  const nextPage = page + 1;
 
   return (
     <>
@@ -46,6 +58,12 @@ const Page = async ({ searchParams }) => {
             </li>
           ))}
         </ul>
+
+        {page === 1 ? (
+          <div className="opacity-60">Previous</div>
+        ) : (
+          <Link href={`?page=${prevPage}`}>Previous</Link>
+        )}
       </div>
     </>
   );
