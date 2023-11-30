@@ -45,6 +45,16 @@ const Page = async ({ searchParams }) => {
   // Next page
   const nextPage = page + 1;
 
+  // Page Numbers
+  const pageNumbers = [];
+  const offsetNumber = 3;
+  // Check if we are not on the first page or last page
+  for (let i = page - offsetNumber; i <= page + offsetNumber; i++) {
+    if (i >= 1 && i <= totalPages) {
+      pageNumbers.push(i);
+    }
+  }
+
   return (
     <>
       <div className="container mx-auto mt-8">
@@ -70,6 +80,21 @@ const Page = async ({ searchParams }) => {
                 Previous
               </Link>
             )}
+
+            {/* Highlight when on current page */}
+            {pageNumbers.map((pageNumber, index) => (
+              <Link
+                key={index}
+                className={
+                  page === pageNumber
+                    ? "bg-green-500 fw-bold px-2 rounded-md text-black"
+                    : "hover:bg-green-500 px-1 rounded-md"
+                }
+                href={`?page=${pageNumber}`}
+              >
+                {pageNumber}
+              </Link>
+            ))}
 
             {page === totalPages ? (
               <div className="opacity-60" aria-disabled="true">
